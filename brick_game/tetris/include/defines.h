@@ -5,6 +5,8 @@
 #define HEIGHT 20
 #define WIDTH 10
 
+#define START_X_POSITION 4
+
 // Tetris Block
 #define BLOCKS_COUNT 7
 
