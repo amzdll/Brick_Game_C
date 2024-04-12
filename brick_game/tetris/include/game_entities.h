@@ -8,7 +8,6 @@
 #include "memory_management.h"
 
 typedef struct block {
-  // add allowed coordinates
   size_t x;
   size_t y;
   size_t height;

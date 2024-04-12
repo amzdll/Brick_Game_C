@@ -10,11 +10,11 @@ int **allocate_int_two_dimensional_array(size_t height, size_t width) {
   return array;
 }
 
-void free_blocks(block_t* blocks) {
-  for (size_t i = 0; i < BLOCKS_COUNT; ++i) {
-    for (size_t j = 0; j < blocks[i].height; ++j) {
-      free(blocks[i].field[j]);
+void free_int_two_dimensional_array(size_t height, size_t width, int**two_dimensional_array) {
+  for (size_t i = 0; i < height; ++i) {
+    for (size_t j = 0; j < width; ++j) {
+      free(two_dimensional_array[j]);
     }
-    free(blocks[i].field);
+    free(two_dimensional_array[i]);
   }
 }

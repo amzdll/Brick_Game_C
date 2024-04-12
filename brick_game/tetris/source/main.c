@@ -2,29 +2,36 @@
 
 #include "defines.h"
 #include "game_entities.h"
+#include "helpers.h"
 #include "services.h"
 
 int main() {
   game_board_t game_board = initialize_game_board();
 
-  for (int i = 0; i < game_board.width; ++i) {
-    game_board.field[19][i] = 1;
-  }
-
   block_t* blocks = initialize_blocks();
-  block_t current_block = create_block(blocks);
-  place_block(&game_board, current_block);
-  down_move(&game_board, &current_block);
-  down_move(&game_board, &current_block);
-  down_move(&game_board, &current_block);
-  printf("\n%zu \n", current_block.y);
+  //  block_t current_block = create_block(blocks);
 
+  block_t current_block = blocks[1];
+  block_t temp = blocks[2];
+  current_block.x = 0;
+  temp.x = 3;
 
   //  turn_block(&game_board, current_block);
-  //  right_shift(&game_board, block);
-  //  remove_block(&game_board, block);
+  place_block(&game_board, temp);
+  place_block(&game_board, current_block);
+//  right_shift(&game_board, &current_block);
+  //  right_shift(&game_board, &current_block);
+  //  right_shift(&game_board, &current_block);
+  //  right_shift(&game_board, &current_block);
 
-  //  left_shift(&game_board, block);
+//  left_shift(&game_board, &current_block);
+  //  while (!is_game_over(game_board, current_block)) {
+  //    while (!is_collision(game_board, current_block)) {
+  //      down_move(&game_board, &current_block);
+  //    }
+  //    current_block = create_block(blocks);
+  //  }
+
   printf(" \t");
   for (int i = 0; i < WIDTH; ++i) {
     printf("%d ", i);
@@ -38,5 +45,6 @@ int main() {
     printf("\n");
   }
 
+  free_int_two_dimensional_array()
   return 0;
 }

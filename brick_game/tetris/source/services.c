@@ -4,7 +4,10 @@
 #include <string.h>
 #include <time.h>
 
+#include "helpers.h"
+
 block_t create_block(block_t* blocks) {
+  // fix
   srand(time(NULL));
   int random = rand();
   int block_index = rand() % BLOCKS_COUNT;
@@ -32,7 +35,7 @@ void remove_block(game_board_t* game_board, block_t block) {
        * 1 0
        * 1 1
        *
-       *  (a & b) * !b
+       *  (a ^ b) * !b
        */
       game_board->field[block.y + i][block.x + j] =
           (game_board->field[block.y + i][block.x + j] & block.field[i][j])
@@ -44,6 +47,11 @@ void remove_block(game_board_t* game_board, block_t block) {
 
 void turn_block(game_board_t* game_board, block_t block) {
   // todo: statement guard
+  size_t block_width = block.height;
+  size_t block_height = block.width;
+
+//  block.width = block_width;
+//  block.height = block_height;
 
   remove_block(game_board, block);
   int block_cell = 0;
@@ -70,38 +78,29 @@ void left_shift(game_board_t* game_board, block_t* block) {
   place_block(game_board, *block);
 }
 
+// 0 0
+
 void right_shift(game_board_t* game_board, block_t* block) {
   if (block->x + block->width == game_board->width) {
     return;
   }
+  for (int i = 0; i < block->height; ++i) {
+    if (game_board->field[block->y][block->x + block->width]) {
+      return;
+    }
+  }
+
   remove_block(game_board, *block);
   block->x += 1;
   place_block(game_board, *block);
 }
 
 void down_move(game_board_t* game_board, block_t* block) {
-  // check_collision && y > 0
-  //  if {
-  //
-  //  }
+  if (block->height + block->y == game_board->height) {
+    printf("hui\n");
+    return;
+  }
   remove_block(game_board, *block);
-  block->y  += 1;
+  block->y += 1;
   place_block(game_board, *block);
 }
-
-
-/* (a & b) * !b
-  0000000000000000000000
-  0000000000000000000000
-  0000000000000000000000
-  0000000000000000000000
-  0000000001000000000000
-  0000000001110000000000
-  0000000001110000000000
-  0000000000000000000000
-  0000000000000000000000
-  0000000000000000000000
-  0000000000000000000000
- */
-
-
