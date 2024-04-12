@@ -45,6 +45,7 @@ int main() {
     printf("\n");
   }
 
-  free_int_two_dimensional_array()
+  free_int_two_dimensional_array(NULL, 0);
+  free_blocks(blocks);
   return 0;
 }
