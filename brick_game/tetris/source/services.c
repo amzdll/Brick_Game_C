@@ -7,10 +7,7 @@
 #include "helpers.h"
 
 block_t create_block(block_t* blocks) {
-  // fix
-  srand(time(NULL));
-  int random = rand();
-  int block_index = rand() % BLOCKS_COUNT;
+  uint32_t block_index = arc4random() % BLOCKS_COUNT;
   block_t block = blocks[block_index];
   block.x = (int)(WIDTH - block.width) / 2;
   block.y = 0;
@@ -50,8 +47,8 @@ void turn_block(game_board_t* game_board, block_t block) {
   size_t block_width = block.height;
   size_t block_height = block.width;
 
-//  block.width = block_width;
-//  block.height = block_height;
+  //  block.width = block_width;
+  //  block.height = block_height;
 
   remove_block(game_board, block);
   int block_cell = 0;
@@ -81,9 +78,11 @@ void left_shift(game_board_t* game_board, block_t* block) {
 // 0 0
 
 void right_shift(game_board_t* game_board, block_t* block) {
+  // statement guard
   if (block->x + block->width == game_board->width) {
     return;
   }
+  // FIX
   for (int i = 0; i < block->height; ++i) {
     if (game_board->field[block->y][block->x + block->width]) {
       return;
@@ -104,3 +103,5 @@ void down_move(game_board_t* game_board, block_t* block) {
   block->y += 1;
   place_block(game_board, *block);
 }
+
+//  void fast_down_move() {}

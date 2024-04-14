@@ -8,7 +8,8 @@ file(GLOB_RECURSE HEADERS include/*.h)
 
 set(tetris_lib
         ${HEADERS}
-        ${SOURCES})
+        ${SOURCES}
+)
 
 ADD_EXECUTABLE(tetris ${tetris_lib})
 target_include_directories(tetris PUBLIC include)

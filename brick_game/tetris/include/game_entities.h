@@ -21,6 +21,16 @@ typedef struct game_board {
   int** field;
 } game_board_t;
 
+
+// maybe???
+//typedef struct game {
+//  game_board_t game_board;
+//  int level;
+//  int high_score;
+//  int speed;
+//  int pause;
+//};
+
 game_board_t initialize_game_board();
 block_t* initialize_blocks();
 

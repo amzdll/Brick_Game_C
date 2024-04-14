@@ -16,11 +16,11 @@ void free_int_two_dimensional_array(int **two_dimensional_array,
   free(two_dimensional_array);
 }
 
-void free_blocks(block_t *blocks) {
-  for (size_t i = 0; i < BLOCKS_COUNT; ++i) {
-    for (size_t j = 0; j < blocks[i].height; ++j) {
-      free(blocks[i].field[j]);
-    }
-    free(blocks[i].field);
-  }
-}
+//void free_blocks(block_t *blocks) {
+//  for (size_t i = 0; i < BLOCKS_COUNT; ++i) {
+//    for (size_t j = 0; j < blocks[i].height; ++j) {
+//      free(blocks[i].field[j]);
+//    }
+//    free(blocks[i].field);
+//  }
+//}

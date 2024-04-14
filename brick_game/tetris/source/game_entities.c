@@ -26,11 +26,9 @@ block_t *initialize_blocks() {
 block_t initialize_block(size_t height, size_t width, int (*figure)[width]) {
   size_t dimension = height > width ? height : width;
   block_t block = {0, 0, height, width,
-                   allocate_int_two_dimensional_array(dimension, dimension)};
+      allocate_int_two_dimensional_array(dimension, dimension)};
   for (int i = 0; i < height; ++i) {
     memcpy(block.field[i], figure[i], width * sizeof(int));
   }
   return block;
 }
-
-//void free_blocks(block_t *block) { free(block); }
