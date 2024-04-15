@@ -22,7 +22,8 @@ bool is_collision(game_board_t game_board, block_t block) {
 }
 
 bool is_row_complete(int* row) {
-  return !(int*)bsearch((void*)&(int){0}, row, WIDTH, sizeof(int), compare_nums);
+  return !(int*)bsearch((void*)&(int){0}, row, WIDTH, sizeof(int),
+                        compare_nums);
 }
 
 bool is_game_over(game_board_t game_board, block_t block) {

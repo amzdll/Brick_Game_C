@@ -23,14 +23,13 @@ void place_block(game_board_t* game_board, block_t block) {
 }
 
 void remove_block(game_board_t* game_board, block_t block) {
-  int game_board_cell;
-  int block_cell;
+  int* game_board_cell = NULL;
+  int* block_cell = NULL;
   for (int i = 0; i < block.height; ++i) {
     for (int j = 0; j < block.width; ++j) {
-      game_board_cell = game_board->field[block.y + i][block.x + j];
-      block_cell = block.field[i][j];
-      game_board->field[block.y + i][block.x + j] =
-          (game_board_cell ^ block_cell) * !block_cell;
+      game_board_cell = &game_board->field[block.y + i][block.x + j];
+      block_cell = &block.field[i][j];
+      *game_board_cell = (*game_board_cell ^ *block_cell) * !*block_cell;
     }
   }
 }
@@ -64,7 +63,7 @@ void move_left(game_board_t* game_board, block_t* block) {
     return;
   }
   remove_block(game_board, *block);
-  block->x -= 1;
+  block->x--;
   place_block(game_board, *block);
 }
 
@@ -82,13 +81,13 @@ void move_right(game_board_t* game_board, block_t* block) {
   }
 
   remove_block(game_board, *block);
-  block->x += 1;
+  block->x++;
   place_block(game_board, *block);
 }
 
 void move_down(game_board_t* game_board, block_t* block) {
   remove_block(game_board, *block);
-  block->y += 1;
+  block->y++;
   place_block(game_board, *block);
 }
 
