@@ -6,11 +6,12 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(GLOB_RECURSE SOURCES source/*.c)
 file(GLOB_RECURSE HEADERS include/*.h)
 
-set(tetris_lib
+include_directories(source include)
+
+
+add_library(TetrisLib STATIC
         ${HEADERS}
         ${SOURCES}
 )
 
-ADD_EXECUTABLE(tetris ${tetris_lib})
-target_include_directories(tetris PUBLIC include)
-cmake_minimum_required(VERSION 3.26)
+target_include_directories(TetrisLib PUBLIC include)

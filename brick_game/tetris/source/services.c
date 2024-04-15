@@ -75,10 +75,9 @@ void left_shift(game_board_t* game_board, block_t* block) {
   place_block(game_board, *block);
 }
 
-// 0 0
-
 void right_shift(game_board_t* game_board, block_t* block) {
   // statement guard
+  //for height for  last_elemnt width && last_elemnt width + 1 || ...
   if (block->x + block->width == game_board->width) {
     return;
   }
@@ -95,10 +94,6 @@ void right_shift(game_board_t* game_board, block_t* block) {
 }
 
 void down_move(game_board_t* game_board, block_t* block) {
-  if (block->height + block->y == game_board->height) {
-    printf("hui\n");
-    return;
-  }
   remove_block(game_board, *block);
   block->y += 1;
   place_block(game_board, *block);
