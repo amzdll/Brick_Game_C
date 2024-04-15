@@ -22,14 +22,15 @@ typedef struct game_board {
 } game_board_t;
 
 
-// maybe???
-//typedef struct game {
+//// maybe???
+//typedef struct game_instance {
 //  game_board_t game_board;
+//    block_t block;
 //  int level;
 //  int high_score;
 //  int speed;
 //  int pause;
-//};
+//} game_instance;
 
 game_board_t initialize_game_board();
 block_t* initialize_blocks();

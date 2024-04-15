@@ -1,5 +1,9 @@
 #include "helpers.h"
 
+#include <fcntl.h>
+#include <time.h>
+#include <zconf.h>
+
 bool is_collision(game_board_t game_board, block_t block) {
   if (block.height + block.y == HEIGHT) {
     return true;
@@ -7,28 +11,37 @@ bool is_collision(game_board_t game_board, block_t block) {
 
   for (size_t i = 0; i < block.height; ++i) {
     for (size_t j = 0; j < block.width; ++j) {
-      if (block.field[i][j] && game_board.field[block.y + i + 1][block.x + j]) {
-        // poka eto ponimau tolka ia i bog, zavtra budet znat' tolko bog.
-        if ((i + 1 < block.height && !block.field[i + 1][j]) ||
-            i + 1 == block.height) {
-          return true;
-        }
-      }
+      // poka eto ponimau tolka ia i bog, zavtra budet znat' tolko bog.
+      if (block.field[i][j] && game_board.field[block.y + i + 1][block.x + j] &&
+          ((i + 1 < block.height && !block.field[i + 1][j]) ||
+           i + 1 == block.height))
+        return true;
     }
   }
-
   return false;
 }
 
-int compare(const void* a, const void* b) { return (*(int*)a - *(int*)b); }
-
 bool is_row_complete(int* row) {
-  int key = 0;
-  return !(int*)bsearch(&key, row, WIDTH, sizeof(int), compare);
+  return !(int*)bsearch((void*)&(int){0}, row, WIDTH, sizeof(int), compare_nums);
 }
 
 bool is_game_over(game_board_t game_board, block_t block) {
   return is_collision(game_board, block) && block.y == 0;
+}
+
+int compare_nums(const void* a, const void* b) { return (*(int*)a - *(int*)b); }
+
+void init_random_seed() {
+  unsigned int seed = time(NULL);
+  int fd = open("/dev/urandom", O_RDONLY);
+  if (fd != -1) {
+    size_t bytes_read = read(fd, &seed, sizeof(seed));
+    if (bytes_read != sizeof(seed)) {
+      seed = time(NULL);
+    }
+    close(fd);
+  }
+  srand(seed);
 }
 
 // temp

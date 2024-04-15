@@ -3,13 +3,15 @@
 #include "services.h"
 
 int main() {
+  init_random_seed();
   game_board_t game_board = initialize_game_board();
   block_t* blocks = initialize_blocks();
 
   int n = 0;
   block_t current_block = create_block(blocks);
+
   while (!is_game_over(game_board, current_block)) {
-    down_move(&game_board, &current_block);
+    move_down(&game_board, &current_block);
     if (is_collision(game_board, current_block)) {
       current_block = create_block(blocks);
     }
@@ -29,30 +31,30 @@ int main() {
   //
   //  //  printf("%s\n", is_collision(game_board, temp) ? "true" : "false");
   //
+  //  block_t block_1 = blocks[0];
+  //  block_t block_2 = blocks[0];
+  //  block_t block_3 = blocks[3];
+  //  block_t block_4 = blocks[3];
+  //  block_t block_5 = blocks[5];
+  //  block_1.y = 17;
+  //  block_1.x = 0;
+  //  block_2.y = 17;
+  //  block_2.x = 4;
+  //  block_3.y = 16;
+  //  block_3.x = 8;
+  //  block_4.y = 18;
+  //  block_4.x = 8;
+  //  block_5.y = 15;
+  //  block_5.x = 7;
+  //  place_block(&game_board, block_1);
+  //  place_block(&game_board, block_2);
+  //  place_block(&game_board, block_3);
+  //  place_block(&game_board, block_4);
+  //  place_block(&game_board, block_5);
+  //  if (is_row_complete(game_board.field[17])) {
+  //    game_board_shift(&game_board, 17);
+  //  }
+
   draw_field(game_board);
   return 0;
 }
-
-/*
-        0 1 2 3 4 5 6 7 8 9
-0	0 0 0 0 0 0 0 0 0 0
-1	0 0 0 0 0 0 0 0 0 0
-2	0 0 0 0 0 0 0 0 0 0
-3	0 0 0 0 0 0 0 0 0 0
-4	0 0 0 0 0 0 0 0 0 0
-5	0 0 0 0 0 0 0 0 0 0
-6	0 0 0 0 0 0 0 0 0 0
-7	0 0 0 0 0 0 0 0 0 0
-8	0 0 0 0 0 0 0 0 0 0
-9	0 0 0 0 0 0 0 0 0 0
-10	0 0 0 0 0 0 0 0 0 0
-11	0 0 0 0 0 0 0 0 0 0
-12	0 0 0 0 0 0 0 0 0 0
-13	0 0 0 0 0 0 0 0 0 0
-14	0 0 0 0 0 0 0 0 0 0
-15	0 0 0 0 0 0 0 0 0 0
-18	0 0 0 0 0 0 0 0 0 0
- 16	0 0 0 0 2 2 0 0 1 1
-17	0 0 0 2 2 0 0 0 1 1
-19	0 0 0 1 1 1 1 0 0 0
- */
