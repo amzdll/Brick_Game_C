@@ -35,13 +35,10 @@ void remove_block(game_board_t game_board, block_t block) {
 }
 
 void spawn_block(game_board_t game_board, block_t block) {
-  if (block.x != 0) {
-    return;
-  }
   place_block(game_board, block);
 }
 
-void turn_block(game_board_t game_board, block_t* block) {
+void rotate_block(game_board_t game_board, block_t* block) {
   // todo: statement guard
 //  size_t block_width = block.height;
 //  size_t block_height = block.width;

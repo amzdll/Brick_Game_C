@@ -43,4 +43,17 @@
     {0, 7, 0}, { 7, 7, 7 } \
   }
 
+typedef enum {
+  START = 0,
+  SPAWN = 1,
+  MOVING = 2,
+  SHIFTING = 3,
+  COLLIDE = 4,
+  GAME_OVER = 5,
+  EXIT_STATE = 6
+} game_state;
+
+// ncurses key
+#define ESCAPE 27
+
 #endif  // TETRIS_SRC_BRICK_GAME_TETRIS_INCLUDE_DEFINES_H_

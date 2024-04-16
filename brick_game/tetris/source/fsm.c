@@ -1,17 +1,37 @@
 #include "fsm.h"
 
-void sigact(signals sig, game_state *state, game_stats_t *stats, game_board_t *game_board,
-            struct block *current_block) {
-  params_t prms;
-  prms.stats = stats;
-  prms.state = state;
-  prms.map = map;
-  prms.frog_pos = frog_pos;
+#include "helpers.h"
 
-  action act = fsm_table[*state][sig];
+action fsm_table[8][7] = {
+    // START
+    {start_action, start_action, start_action, start_action, exit_state_action,
+     NULL, NULL},
+    // SPAWN
+    {spawn_action, spawn_action, spawn_action, spawn_action, spawn_action,
+     spawn_action, spawn_action},
+    // MOVING
+    {rotate_action, move_down_action, move_right_action, move_left_action,
+     exit_state_action, NULL, NULL},
+    // SHIFTING
+    {rotate_action, move_down_action, move_right_action, move_left_action,
+     exit_state_action, NULL, NULL},
+    // COLLIDE
+    {collide_action, collide_action, collide_action, collide_action,
+     collide_action, collide_action, collide_action},
+    // GAME_OVER
+    {game_over_action, game_over_action, game_over_action, game_over_action,
+     game_over_action, game_over_action, game_over_action},
+    // EXIT_STATE
+    {exit_state_action, exit_state_action, exit_state_action, exit_state_action,
+     exit_state_action, exit_state_action, exit_state_action},
+};
 
-  if (act) {
-    act(&prms);
+void call_action(signals signal, game_instance_t* game_instance,
+                 game_parameters_t* game_parameters) {
+  action action = fsm_table[game_parameters->current_state][signal];
+
+  if (action) {
+    action(game_instance, game_parameters);
   }
 }
 
@@ -33,100 +53,77 @@ signals get_signal(int user_input) {
   return signal;
 }
 
-void shifting(params_t *prms) {
-  shift_map(prms->map);
-
-  if (check_collide(prms->frog_pos, prms->map))
-    *prms->state = COLLIDE;
-  else {
-    *prms->state = MOVING;
-    print_board(prms->map, prms->frog_pos);
-    print_stats(prms->stats);
+void start_action(game_instance_t* game_instance,
+                  game_parameters_t* game_parameters) {
+  if (game_instance) {
+    clear_game_board(game_instance->game_board);
   }
+  game_parameters->current_state = SPAWN;
 }
 
-void check(params_t *prms) {
-  if (check_collide(prms->frog_pos, prms->map))
-    *prms->state = COLLIDE;
-  else if (check_finish_state(prms->frog_pos, prms->map))
-    *prms->state = REACH;
-  else
-    *prms->state = SHIFTING;
+void spawn_action(game_instance_t* game_instance,
+                  game_parameters_t* game_parameters) {
+  game_instance->current_block = create_block(game_instance->block_pool);
+  spawn_block(game_instance->game_board, game_instance->current_block);
+  game_parameters->current_state = MOVING;
 }
 
-// void spawn(params_t *prms) {
-//   if (prms->stats->level > LEVEL_CNT)
-//     *prms->state = GAMEOVER;
-//   else {
-//     if (!lvlproc(prms->map, prms->stats)) {
-//       fill_finish(prms->map->finish);
-//       print_finished(prms->map);
-//       frogpos_init(prms->frog_pos);
-//       *prms->state = MOVING;
-//     } else
-//       *prms->state = EXIT_STATE;
-//   }
-// }
-
-void moveup(params_t *prms) {
-  if (prms->frog_pos->y != 1) {
-    CLEAR_BACKPOS(prms->frog_pos->y, prms->frog_pos->x);
-    prms->frog_pos->y -= 2;
-  }
-
-  check(prms);
-}
-
-void movedown(params_t *prms) {
-  if (prms->frog_pos->y != BOARD_N) {
-    CLEAR_BACKPOS(prms->frog_pos->y, prms->frog_pos->x);
-    prms->frog_pos->y += 2;
-  }
-
-  check(prms);
-}
-
-void moveright(params_t *prms) {
-  if (prms->frog_pos->x != BOARD_M) {
-    CLEAR_BACKPOS(prms->frog_pos->y, prms->frog_pos->x);
-    prms->frog_pos->x++;
-  }
-
-  check(prms);
-}
-
-void moveleft(params_t *prms) {
-  if (prms->frog_pos->x != 1) {
-    CLEAR_BACKPOS(prms->frog_pos->y, prms->frog_pos->x);
-    prms->frog_pos->x--;
-  }
-
-  check(prms);
-}
-
-void reach(params_t *prms) {
-  prms->stats->score += 1;
-  add_proggress(prms->map);
-  if (check_level_compl(prms->map)) {
-    prms->stats->level++;
-    prms->stats->speed++;
-    *prms->state = SPAWN;
+void rotate_action(game_instance_t* game_instance,
+                   game_parameters_t* game_parameters) {
+  if (is_collision(game_instance->game_board,
+                   game_instance->current_block)) {
+    game_parameters->current_state = COLLIDE;
   } else {
-    frogpos_init(prms->frog_pos);
-    print_finished(prms->map);
-    *prms->state = MOVING;
+    rotate_block(game_instance->game_board, &game_instance->current_block);
+  }
+}
+void move_down_action(game_instance_t* game_instance,
+                      game_parameters_t* game_parameters) {
+  if (is_collision(game_instance->game_board,
+                          game_instance->current_block)) {
+    game_parameters->current_state = COLLIDE;
+  } else {
+    move_down(game_instance->game_board, &game_instance->current_block);
   }
 }
 
-void collide(params_t *prms) {
-  if (prms->stats->lives) {
-    prms->stats->lives--;
-    frogpos_init(prms->frog_pos);
-    *prms->state = MOVING;
-  } else
-    *prms->state = GAMEOVER;
+void move_right_action(game_instance_t* game_instance,
+                       game_parameters_t* game_parameters) {
+  if (is_collision(game_instance->game_board,
+                   game_instance->current_block)) {
+    game_parameters->current_state = COLLIDE;
+  } else {
+    move_right(game_instance->game_board, &game_instance->current_block);
+  }
+}
+void move_left_action(game_instance_t* game_instance,
+                      game_parameters_t* game_parameters) {
+  if (is_collision(game_instance->game_board,
+                   game_instance->current_block)) {
+    game_parameters->current_state = COLLIDE;
+  } else {
+    move_left(game_instance->game_board, &game_instance->current_block);
+  }
+}
+void collide_action(game_instance_t* game_instance,
+                    game_parameters_t* game_parameters) {
+  if (is_game_over(game_instance->game_board, game_instance->current_block)) {
+    game_parameters->current_state = GAME_OVER;
+  } else {
+    game_parameters->current_state = SPAWN;
+  }
+
+}
+void exit_state_action(game_instance_t* game_instance,
+                       game_parameters_t* game_parameters) {
+  // free
+  return;
+}
+void game_over_action(game_instance_t* game_instance,
+                      game_parameters_t* game_parameters) {
+  printf("nu ti i lox, sore\n");
 }
 
-void game_over(params_t *prms) { print_banner(prms->stats); }
+// void game_over(params_t *prms) { print_banner(prms->stats); }
 
-void exit_tate(params_t *prms) { *prms->state = EXIT_STATE; }
+// void exit_tate(params_t *prms) { *prms->state = EXIT_STATE; }

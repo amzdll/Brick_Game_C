@@ -1,21 +1,29 @@
 #include "game_entities.h"
 
-#include <memory.h>
+game_instance_t initialize_game_instance() {
+#ifdef __linux__
+  initialize_random_seed();
+#endif
+  return (game_instance_t){
+      allocate_int_two_dimensional_array((size_t)HEIGHT, (size_t)WIDTH),
+      (block_t){}, initialize_blocks()};
+}
 
+void initialize_random_seed() {
+  unsigned int seed = time(NULL);
+  int fd = open("/dev/urandom", O_RDONLY);
+  if (fd != -1) {
+    size_t bytes_read = read(fd, &seed, sizeof(seed));
+    if (bytes_read != sizeof(seed)) {
+      seed = time(NULL);
+    }
+    close(fd);
+  }
+  srand(seed);
+}
 
-//game_state_t initialize_game_state() {
-//  game_state_t game_state = {
-//      initialize_game_board(),
-//      initialize_blocks(),
-//      (block_t){},
-//      NULL
-//  };
-//  return game_state;
-//}
-
-
-game_board_t initialize_game_board() {
-  return allocate_int_two_dimensional_array((size_t)HEIGHT, (size_t)WIDTH);
+game_parameters_t initialize_game_parameters() {
+  return (game_parameters_t){0, 1, 1, START};
 }
 
 block_t *initialize_blocks() {
