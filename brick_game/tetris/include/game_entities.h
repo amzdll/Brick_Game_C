@@ -7,6 +7,8 @@
 #include "defines.h"
 #include "memory_management.h"
 
+typedef int** game_board_t;
+
 typedef struct block {
   size_t x;
   size_t y;
@@ -15,11 +17,14 @@ typedef struct block {
   int** field;
 } block_t;
 
-typedef struct game_board {
-  size_t height;
-  size_t width;
-  int** field;
-} game_board_t;
+typedef struct game_stats {
+  int score;
+  int level;
+  int speed;
+  bool lives;
+  bool won;
+} game_stats_t;
+
 
 game_board_t initialize_game_board();
 block_t* initialize_blocks();

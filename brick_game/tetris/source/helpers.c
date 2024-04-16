@@ -12,10 +12,11 @@ bool is_collision(game_board_t game_board, block_t block) {
   for (size_t i = 0; i < block.height; ++i) {
     for (size_t j = 0; j < block.width; ++j) {
       // poka eto ponimau tolka ia i bog, zavtra budet znat' tolko bog.
-      if (block.field[i][j] && game_board.field[block.y + i + 1][block.x + j] &&
+      if (block.field[i][j] && game_board[block.y + i + 1][block.x + j] &&
           ((i + 1 < block.height && !block.field[i + 1][j]) ||
-           i + 1 == block.height))
+           i + 1 == block.height)) {
         return true;
+      }
     }
   }
   return false;
@@ -55,7 +56,7 @@ void draw_field(game_board_t game_board) {
   for (size_t i = 0; i < HEIGHT; ++i) {
     printf("%zu\t", i);
     for (size_t j = 0; j < WIDTH; ++j) {
-      printf("%d ", game_board.field[i][j]);
+      printf("%d ", game_board[i][j]);
     }
     printf("\n");
   }

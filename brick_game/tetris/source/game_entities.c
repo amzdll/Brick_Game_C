@@ -2,11 +2,20 @@
 
 #include <memory.h>
 
+
+//game_state_t initialize_game_state() {
+//  game_state_t game_state = {
+//      initialize_game_board(),
+//      initialize_blocks(),
+//      (block_t){},
+//      NULL
+//  };
+//  return game_state;
+//}
+
+
 game_board_t initialize_game_board() {
-  game_board_t game_board = {
-      HEIGHT, WIDTH,
-      allocate_int_two_dimensional_array((size_t)HEIGHT, (size_t)WIDTH)};
-  return game_board;
+  return allocate_int_two_dimensional_array((size_t)HEIGHT, (size_t)WIDTH);
 }
 
 block_t *initialize_blocks() {

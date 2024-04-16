@@ -7,15 +7,13 @@ int main() {
   game_board_t game_board = initialize_game_board();
   block_t* blocks = initialize_blocks();
 
-  int n = 0;
   block_t current_block = create_block(blocks);
 
   while (!is_game_over(game_board, current_block)) {
-    move_down(&game_board, &current_block);
+    move_down(game_board, &current_block);
     if (is_collision(game_board, current_block)) {
       current_block = create_block(blocks);
     }
-    ++n;
   }
 
   draw_field(game_board);
