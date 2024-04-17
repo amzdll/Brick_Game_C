@@ -107,7 +107,7 @@ void move_left_action(game_instance_t* game_instance,
 }
 void collide_action(game_instance_t* game_instance,
                     game_parameters_t* game_parameters) {
-  if (is_game_over(game_instance->game_board, game_instance->current_block)) {
+  if (game_instance->current_block.y == 0) {
     game_parameters->current_state = GAME_OVER;
   } else {
     game_parameters->current_state = SPAWN;

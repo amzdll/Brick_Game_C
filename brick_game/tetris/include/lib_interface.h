@@ -2,6 +2,7 @@
 #define TETRIS_SRC_BRICK_GAME_TETRIS_INCLUDE_LIB_INTERFACE_H_
 
 #include <stdbool.h>
+#include "fsm.h"
 
 typedef enum {
   Start,
