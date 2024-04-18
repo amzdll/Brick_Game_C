@@ -18,6 +18,7 @@ typedef struct block {
   size_t y;
   size_t height;
   size_t width;
+  size_t field_dimenssion;
   int** field;
 } block_t;
 
@@ -26,6 +27,8 @@ typedef struct game_instance {
   block_t current_block;
   block_t* block_pool;
 } game_instance_t;
+
+
 
 typedef struct game_parameters {
   int score;

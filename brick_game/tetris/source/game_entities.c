@@ -42,7 +42,11 @@ block_t *initialize_blocks() {
 
 block_t initialize_block(size_t height, size_t width, int (*figure)[width]) {
   size_t dimension = height > width ? height : width;
-  block_t block = {0, 0, height, width,
+  block_t block = {block.x = (int)(WIDTH - width) / 2,
+                   0,
+                   height,
+                   width,
+                   dimension,
                    allocate_int_two_dimensional_array(dimension, dimension)};
   for (int i = 0; i < height; ++i) {
     memcpy(block.field[i], figure[i], width * sizeof(int));

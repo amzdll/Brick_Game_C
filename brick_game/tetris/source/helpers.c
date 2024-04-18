@@ -22,16 +22,21 @@ bool is_collision(game_board_t game_board, block_t block) {
   return collision;
 }
 
-bool is_row_complete(int* row) {
-  return !(int*)bsearch((void*)&(int){0}, row, WIDTH, sizeof(int),
-                        compare_nums);
+bool is_row_complete(const int* row) {
+  for (int i = 0; i < WIDTH; ++i) {
+    if (row[i] == 0) {
+      return false;
+    }
+  }
+  return true;
+
+  //  return !(int*)bsearch((void*)&(int){0}, row, WIDTH, sizeof(int),
+  //                        compare_nums);
 }
 
 bool is_game_over(game_board_t game_board, block_t block) {
   return is_collision(game_board, block) && block.y == 0;
 }
-
-int compare_nums(const void* a, const void* b) { return (*(int*)a - *(int*)b); }
 
 void clear_game_board(game_board_t game_board) {
   for (int i = 0; i < HEIGHT; ++i) {
@@ -39,16 +44,39 @@ void clear_game_board(game_board_t game_board) {
   }
 }
 
+void shift_block_cells(block_t* block) {
+  size_t left_cell_index = block->width;
+  for (size_t i = 0; i < block->field_dimenssion; i++) {
+    for (size_t j = 0; j < block->field_dimenssion; j++) {
+      if (block->field[i][j] != 0) {
+        left_cell_index = left_cell_index < j ? left_cell_index : j;
+        break;
+      }
+    }
+  }
+  for (size_t i = 0; i < block->field_dimenssion; ++i) {
+    for (size_t j = left_cell_index; j < block->width; ++j) {
+      block->field[i][j - left_cell_index] = block->field[i][j];
+    }
+  }
+  for (size_t i = 0; i < block->field_dimenssion; ++i) {
+    for (size_t j = block->field_dimenssion - left_cell_index;
+         j < block->field_dimenssion; ++j) {
+      block->field[i][j] = 0;
+    }
+  }
+}
+
 // temp
 void draw_field(game_board_t game_board) {
   printf(" \t");
-  for (int i = 0; i < WIDTH; ++i) {
+  for (int i = 0; i < 3; ++i) {
     printf("%d ", i);
   }
   printf(" \n");
-  for (size_t i = 0; i < HEIGHT; ++i) {
+  for (size_t i = 0; i < 3; ++i) {
     printf("%zu\t", i);
-    for (size_t j = 0; j < WIDTH; ++j) {
+    for (size_t j = 0; j < 3; ++j) {
       printf("%d ", game_board[i][j]);
     }
     printf("\n");

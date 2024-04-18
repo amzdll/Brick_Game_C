@@ -14,4 +14,4 @@ add_executable(CLI
         ${HEADERS}
 )
 
-target_link_libraries(CLI PRIVATE TetrisLib ${CURSES_LIBRARIES} form)
+target_link_libraries(CLI PRIVATE TetrisLib ${CURSES_LIBRARIES} form intl)

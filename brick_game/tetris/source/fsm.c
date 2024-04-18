@@ -72,7 +72,7 @@ void shift_action(game_instance_t* game_instance,
   if (is_collision(game_instance->game_board, game_instance->current_block)) {
     game_parameters->current_state = COLLIDE;
   } else {
-//    move_down(game_instance->game_board, &game_instance->current_block);
+    //    move_down(game_instance->game_board, &game_instance->current_block);
     game_parameters->current_state = MOVING;
   }
 }
@@ -90,13 +90,6 @@ void move_down_action(game_instance_t* game_instance,
                       game_parameters_t* game_parameters) {
   if (is_collision(game_instance->game_board, game_instance->current_block)) {
     game_parameters->current_state = COLLIDE;
-    for (int i = 0; i < game_instance->current_block.height; ++i) {
-      if (is_row_complete(
-              game_instance->game_board[game_instance->current_block.y + i])) {
-        game_board_shift(game_instance->game_board,
-                         game_instance->current_block.y + i);
-      }
-    }
   } else {
     move_down(game_instance->game_board, &game_instance->current_block);
     game_parameters->current_state = SHIFTING;
@@ -126,6 +119,16 @@ void collide_action(game_instance_t* game_instance,
   if (game_instance->current_block.y == 0) {
     game_parameters->current_state = GAME_OVER;
   } else {
+    for (int i = 0; i < game_instance->current_block.height; ++i) {
+      if (is_row_complete(
+              game_instance->game_board[game_instance->current_block.y + i])) {
+        for (int j = 0; j < WIDTH; ++j) {
+          mvprintw(31, j, "%c ", game_instance->game_board[(int)game_instance->current_block.y + i][j] ? '#' : '0');
+        }
+        game_board_shift(game_instance->game_board,
+                         (int)game_instance->current_block.y + i);
+      }
+    }
     game_parameters->current_state = SPAWN;
   }
 }

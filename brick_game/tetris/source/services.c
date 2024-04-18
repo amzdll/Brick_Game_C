@@ -9,8 +9,8 @@ block_t create_block(block_t* blocks) {
   int block_index = rand() % 7;
 #endif
   block_t block = blocks[block_index];
-  block.x = (int)(WIDTH - block.width) / 2;
-  block.y = 0;
+  //  block.x = (int)(WIDTH - block.width) / 2;
+  //  block.y = 0;
   return block;
 }
 
@@ -40,26 +40,31 @@ void spawn_block(game_board_t game_board, block_t block) {
 
 void rotate_block(game_board_t game_board, block_t* block) {
   // todo: statement guard
-//  size_t block_width = block.height;
-//  size_t block_height = block.width;
-//
-//  //  block.width = block_width;
-//  //  block.height = block_height;
-//
-//  remove_block(game_board, *block);
-//  int block_cell = 0;
-//  for (int i = 0; i < block.height / 2; i++) {
-//    for (int j = i; j < block.width - i - 1; j++) {
-//      block_cell = block.field[i][j];
-//      block.field[i][j] = block.field[block.height - 1 - j][i];
-//      block.field[block.height - 1 - j][i] =
-//          block.field[block.height - 1 - i][block.width - 1 - j];
-//      block.field[block.height - 1 - i][block.width - 1 - j] =
-//          block.field[j][block.width - 1 - i];
-//      block.field[j][block.width - 1 - i] = block_cell;
-//    }
-//  }
-//  place_block(game_board, block);
+
+
+  remove_block(game_board, *block);
+  int block_cell = 0;
+  for (int i = 0; i < block->field_dimenssion / 2; i++) {
+    for (int j = i; j < block->field_dimenssion - i - 1; j++) {
+      block_cell = block->field[i][j];
+      block->field[i][j] = block->field[block->field_dimenssion - 1 - j][i];
+      block->field[block->field_dimenssion - 1 - j][i] =
+          block->field[block->field_dimenssion - 1 - i]
+                      [block->field_dimenssion - 1 - j];
+      block->field[block->field_dimenssion - 1 - i]
+                  [block->field_dimenssion - 1 - j] =
+          block->field[j][block->field_dimenssion - 1 - i];
+      block->field[j][block->field_dimenssion - 1 - i] = block_cell;
+    }
+  }
+  shift_block_cells(block);
+  size_t block_width = block->height;
+  size_t block_height = block->width;
+
+  block->width = block_width;
+  block->height = block_height;
+
+  place_block(game_board, *block);
 }
 
 void move_left(game_board_t game_board, block_t* block) {
