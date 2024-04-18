@@ -2,7 +2,7 @@
 #define TETRIS_BRICK_GAME_TETRIS_INCLUDE_HELPERS_H_
 
 #include <stdbool.h>
-
+#include "ncurses.h"
 #include "game_entities.h"
 
 bool is_collision(game_board_t game_board, block_t block);

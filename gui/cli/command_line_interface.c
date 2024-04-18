@@ -7,7 +7,6 @@ void print_overlay(void) {
   print_rectangle(1, 3, BOARD_M + 3, BOARD_M + HUD_WIDTH + 2);
   print_rectangle(4, 6, BOARD_M + 3, BOARD_M + HUD_WIDTH + 2);
   print_rectangle(7, 9, BOARD_M + 3, BOARD_M + HUD_WIDTH + 2);
-//  print_rectangle(10, 12, BOARD_M + 3, BOARD_M + HUD_WIDTH + 2);
 
   MVPRINTW(2, BOARD_M + 5, "LEVEL");
   MVPRINTW(5, BOARD_M + 5, "SCORE");
@@ -35,34 +34,32 @@ void print_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
   MVADDCH(bottom_y, i, ACS_LRCORNER);
 }
 
- void print_parameters(game_parameters_t game_parameters) {
-   MVPRINTW(2, BOARD_M + 12, "%d", game_parameters.level);
-   MVPRINTW(5, BOARD_M + 12, "%d", game_parameters.score);
-   MVPRINTW(8, BOARD_M + 12, "%d", game_parameters.speed);
- }
+void print_parameters(game_parameters_t game_parameters) {
+  MVPRINTW(2, BOARD_M + 12, "%d", game_parameters.level);
+  MVPRINTW(5, BOARD_M + 12, "%d", game_parameters.score);
+  MVPRINTW(8, BOARD_M + 12, "%d", game_parameters.speed);
+}
 
 void print_board(game_board_t game_board) {
-  WIN_INIT(INITIAL_TIMEOUT)
-  refresh();
-
-  for (int i = 0; i < HEIGHT; ++i) {
-    for (int j = 0; j < WIDTH; ++j) {
-      int cell_value = game_board[i][j];
-
-      int x = j + BOARDS_BEGIN;
-      int y = i + BOARDS_BEGIN;
-
-      switch (cell_value) {
-        case 0:
-          MVADDCH(y, x, ' ');
-          break;
-        case 1:
-          break;
-      }
+  for (int i = 1; i < HEIGHT + 1; i++) {
+    for (int j = 1; j < WIDTH + 1; j++) {
+      game_board[i - 1][j - 1] ? MVADDCH(i, j, '#') : MVADDCH(i, j, '-');
     }
   }
-
-  refresh();
-  GET_USER_INPUT;
-  endwin();
 }
+//  for (int i = MAP_PADDING + 1; i < BOARD_N - MAP_PADDING + 1; i++) {
+//    if (i % 2 == (MAP_PADDING + 1) % 2) {
+//      for (int j = 1; j < BOARD_M + 1; j++) {
+////        ACS_BLOCK
+//        MVADDCH(i, j, ' ');
+//      }
+//    } else {
+//      for (int j = 1; j < BOARD_M + 1; j++) {
+//        if (game_board[i - MAP_PADDING - 1][j - 1] == 0)
+//          MVADDCH(i, j, ' ');
+//        else
+//          MVADDCH(i, j, '#');
+//      }
+//    }
+//  }
+//}

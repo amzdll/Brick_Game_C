@@ -4,8 +4,7 @@
 
 action fsm_table[8][7] = {
     // START
-    {start_action, start_action, start_action, start_action, exit_state_action,
-     NULL, NULL},
+    {NULL, NULL, NULL, NULL, exit_state_action, start_action, NULL},
     // SPAWN
     {spawn_action, spawn_action, spawn_action, spawn_action, spawn_action,
      spawn_action, spawn_action},
@@ -13,8 +12,8 @@ action fsm_table[8][7] = {
     {rotate_action, move_down_action, move_right_action, move_left_action,
      exit_state_action, NULL, NULL},
     // SHIFTING
-    {rotate_action, move_down_action, move_right_action, move_left_action,
-     exit_state_action, NULL, NULL},
+    {shift_action, shift_action, shift_action, shift_action, shift_action, NULL,
+     NULL},
     // COLLIDE
     {collide_action, collide_action, collide_action, collide_action,
      collide_action, collide_action, collide_action},
@@ -47,7 +46,7 @@ signals get_signal(int user_input) {
     signal = MOVE_RIGHT;
   else if (user_input == ESCAPE)
     signal = ESCAPE_BTN;
-  else if (user_input == KEY_ENTER)
+  else if (user_input == ENTER_KEY)
     signal = ENTER_BTN;
 
   return signal;
@@ -68,41 +67,58 @@ void spawn_action(game_instance_t* game_instance,
   game_parameters->current_state = MOVING;
 }
 
+void shift_action(game_instance_t* game_instance,
+                  game_parameters_t* game_parameters) {
+  if (is_collision(game_instance->game_board, game_instance->current_block)) {
+    game_parameters->current_state = COLLIDE;
+  } else {
+//    move_down(game_instance->game_board, &game_instance->current_block);
+    game_parameters->current_state = MOVING;
+  }
+}
+
 void rotate_action(game_instance_t* game_instance,
                    game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board,
-                   game_instance->current_block)) {
+  if (is_collision(game_instance->game_board, game_instance->current_block)) {
     game_parameters->current_state = COLLIDE;
   } else {
     rotate_block(game_instance->game_board, &game_instance->current_block);
+    game_parameters->current_state = SHIFTING;
   }
 }
 void move_down_action(game_instance_t* game_instance,
                       game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board,
-                          game_instance->current_block)) {
+  if (is_collision(game_instance->game_board, game_instance->current_block)) {
     game_parameters->current_state = COLLIDE;
+    for (int i = 0; i < game_instance->current_block.height; ++i) {
+      if (is_row_complete(
+              game_instance->game_board[game_instance->current_block.y + i])) {
+        game_board_shift(game_instance->game_board,
+                         game_instance->current_block.y + i);
+      }
+    }
   } else {
     move_down(game_instance->game_board, &game_instance->current_block);
+    game_parameters->current_state = SHIFTING;
   }
 }
 
 void move_right_action(game_instance_t* game_instance,
                        game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board,
-                   game_instance->current_block)) {
+  if (is_collision(game_instance->game_board, game_instance->current_block)) {
     game_parameters->current_state = COLLIDE;
   } else {
     move_right(game_instance->game_board, &game_instance->current_block);
+    game_parameters->current_state = SHIFTING;
   }
 }
 void move_left_action(game_instance_t* game_instance,
                       game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board,
-                   game_instance->current_block)) {
+  if (is_collision(game_instance->game_board, game_instance->current_block)) {
     game_parameters->current_state = COLLIDE;
   } else {
     move_left(game_instance->game_board, &game_instance->current_block);
+    game_parameters->current_state = SHIFTING;
   }
 }
 void collide_action(game_instance_t* game_instance,
@@ -112,7 +128,6 @@ void collide_action(game_instance_t* game_instance,
   } else {
     game_parameters->current_state = SPAWN;
   }
-
 }
 void exit_state_action(game_instance_t* game_instance,
                        game_parameters_t* game_parameters) {
@@ -121,7 +136,8 @@ void exit_state_action(game_instance_t* game_instance,
 }
 void game_over_action(game_instance_t* game_instance,
                       game_parameters_t* game_parameters) {
-  printf("nu ti i lox, sore\n");
+  clear_game_board(game_instance->game_board);
+  game_parameters->current_state = START;
 }
 
 // void game_over(params_t *prms) { print_banner(prms->stats); }

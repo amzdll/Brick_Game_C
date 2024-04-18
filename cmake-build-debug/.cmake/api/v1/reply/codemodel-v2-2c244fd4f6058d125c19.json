@@ -1,0 +1,123 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "brick_game/tetris",
+					"jsonFile" : "directory-brick_game.tetris-Debug-0828e67c62e024fc55a1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "brick_game/tetris",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "gui/cli",
+					"jsonFile" : "directory-gui.cli-Debug-6af7928ff287d34a35c2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "gui/cli",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Tetris"
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "TETRIS_LIB",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "TetrisCli",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "CLI::@9f1086e04e33f445860c",
+					"jsonFile" : "target-CLI-Debug-b4899d49ca583bff3a50.json",
+					"name" : "CLI",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "TetrisLib::@1cfc47133c297c9c9b45",
+					"jsonFile" : "target-TetrisLib-Debug-c7e4f78837f4984eeb5b.json",
+					"name" : "TetrisLib",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug",
+		"source" : "/home/freiqq/Projects/C++/Brick_Game_C"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 5
+	}
+}

@@ -27,6 +27,8 @@ void start_action(game_instance_t* game_instance,
                   game_parameters_t* game_stats);
 void spawn_action(game_instance_t* game_instance,
                   game_parameters_t* game_stats);
+void shift_action(game_instance_t* game_instance,
+                  game_parameters_t* game_parameters);
 void rotate_action(game_instance_t* game_instance,
                    game_parameters_t* game_stats);
 void move_down_action(game_instance_t* game_instance,

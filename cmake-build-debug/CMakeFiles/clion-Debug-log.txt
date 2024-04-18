@@ -1,0 +1,4 @@
+/home/freiqq/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/232.9921.42/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/freiqq/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/232.9921.42/bin/ninja/linux/x64/ninja -G Ninja -S /home/freiqq/Projects/C++/Brick_Game_C -B /home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug
