@@ -1,8 +1,0 @@
-/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug/brick_game/tetris/CMakeFiles/TetrisLib.dir
-/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug/brick_game/tetris/CMakeFiles/edit_cache.dir
-/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug/brick_game/tetris/CMakeFiles/rebuild_cache.dir
-/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug/gui/cli/CMakeFiles/CLI.dir
-/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug/gui/cli/CMakeFiles/edit_cache.dir
-/home/freiqq/Projects/C++/Brick_Game_C/cmake-build-debug/gui/cli/CMakeFiles/rebuild_cache.dir
