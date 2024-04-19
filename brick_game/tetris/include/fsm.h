@@ -10,13 +10,14 @@ typedef void (*action)(game_instance_t* game_instance,
                        game_parameters_t* game_parameters);
 
 typedef enum {
-  TURN = 0,
+  MOVE_UP = 0,
   MOVE_DOWN = 1,
   MOVE_RIGHT = 2,
   MOVE_LEFT = 3,
-  ESCAPE_BTN = 4,
-  ENTER_BTN = 5,
-  NO_SIG = 6
+  SPACE_BTN = 4,
+  ESCAPE_BTN = 5,
+  ENTER_BTN = 6,
+  NO_SIG = 7
 } signals;
 
 
@@ -37,6 +38,8 @@ void move_right_action(game_instance_t* game_instance,
                        game_parameters_t* game_stats);
 void move_left_action(game_instance_t* game_instance,
                       game_parameters_t* game_stats);
+void force_move_down_action(game_instance_t* game_instance,
+                            game_parameters_t* game_parameters);
 void collide_action(game_instance_t* game_instance,
                     game_parameters_t* game_stats);
 void exit_state_action(game_instance_t* game_instance,

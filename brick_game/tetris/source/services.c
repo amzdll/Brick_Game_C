@@ -4,13 +4,19 @@
 
 block_t create_block(block_t* blocks) {
 #ifdef __APPLE__
-  uint32_t block_index = arc4random() % BLOCKS_COUNT;
+  uint32_t block_index = arc4random() % 2;
 #else
-  int block_index = rand() % 7;
+  int block_index = rand() % 2;
 #endif
+//  block_t block = blocks[block_index];
   block_t block = blocks[block_index];
-  //  block.x = (int)(WIDTH - block.width) / 2;
-  //  block.y = 0;
+  int** block_field = allocate_int_two_dimensional_array(
+      block.field_dimenssion, block.field_dimenssion);
+  for (int i = 0; i < block.height; ++i) {
+    memcpy(block_field[i], block.field[i], block.width * sizeof(int));
+  }
+  block.field = block_field;
+
   return block;
 }
 
@@ -41,7 +47,6 @@ void spawn_block(game_board_t game_board, block_t block) {
 void rotate_block(game_board_t game_board, block_t* block) {
   // todo: statement guard
 
-
   remove_block(game_board, *block);
   int block_cell = 0;
   for (int i = 0; i < block->field_dimenssion / 2; i++) {
@@ -60,7 +65,6 @@ void rotate_block(game_board_t game_board, block_t* block) {
   shift_block_cells(block);
   size_t block_width = block->height;
   size_t block_height = block->width;
-
   block->width = block_width;
   block->height = block_height;
 
@@ -71,6 +75,14 @@ void move_left(game_board_t game_board, block_t* block) {
   if (block->x == 0) {
     return;
   }
+  for (int i = 0, j = 0; i < block->height; ++i) {
+    for (; j < block->width && !block->field[i][j]; ++j);
+    if (block->field[i][j] && game_board[block->y + i][block->x + j - 1]) {
+      return;
+    }
+    j = 0;
+  }
+
   remove_block(game_board, *block);
   --block->x;
   place_block(game_board, *block);

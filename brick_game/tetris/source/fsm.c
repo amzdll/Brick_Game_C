@@ -2,27 +2,27 @@
 
 #include "helpers.h"
 
-action fsm_table[8][7] = {
+action fsm_table[8][8] = {
     // START
-    {NULL, NULL, NULL, NULL, exit_state_action, start_action, NULL},
+    {NULL, NULL, NULL, NULL, NULL, exit_state_action, start_action, NULL},
     // SPAWN
     {spawn_action, spawn_action, spawn_action, spawn_action, spawn_action,
-     spawn_action, spawn_action},
+     spawn_action, spawn_action, spawn_action},
     // MOVING
     {rotate_action, move_down_action, move_right_action, move_left_action,
-     exit_state_action, NULL, NULL},
+     force_move_down_action, exit_state_action, NULL, NULL},
     // SHIFTING
     {shift_action, shift_action, shift_action, shift_action, shift_action, NULL,
-     NULL},
+     NULL, NULL},
     // COLLIDE
     {collide_action, collide_action, collide_action, collide_action,
-     collide_action, collide_action, collide_action},
+     collide_action, collide_action, collide_action, NULL},
     // GAME_OVER
     {game_over_action, game_over_action, game_over_action, game_over_action,
-     game_over_action, game_over_action, game_over_action},
+     game_over_action, game_over_action, game_over_action, NULL},
     // EXIT_STATE
     {exit_state_action, exit_state_action, exit_state_action, exit_state_action,
-     exit_state_action, exit_state_action, exit_state_action},
+     exit_state_action, exit_state_action, exit_state_action, NULL},
 };
 
 void call_action(signals signal, game_instance_t* game_instance,
@@ -37,7 +37,7 @@ void call_action(signals signal, game_instance_t* game_instance,
 signals get_signal(int user_input) {
   signals signal = NO_SIG;
   if (user_input == KEY_UP)
-    signal = TURN;
+    signal = MOVE_UP;
   else if (user_input == KEY_DOWN)
     signal = MOVE_DOWN;
   else if (user_input == KEY_LEFT)
@@ -48,6 +48,8 @@ signals get_signal(int user_input) {
     signal = ESCAPE_BTN;
   else if (user_input == ENTER_KEY)
     signal = ENTER_BTN;
+  else if (user_input == SPACE_KEY)
+    signal = SPACE_BTN;
 
   return signal;
 }
@@ -96,6 +98,19 @@ void move_down_action(game_instance_t* game_instance,
   }
 }
 
+void force_move_down_action(game_instance_t* game_instance,
+                            game_parameters_t* game_parameters) {
+  if (is_collision(game_instance->game_board, game_instance->current_block)) {
+    game_parameters->current_state = COLLIDE;
+  } else {
+    while (!is_collision(game_instance->game_board,
+                         game_instance->current_block)) {
+      move_down(game_instance->game_board, &game_instance->current_block);
+      game_parameters->current_state = COLLIDE;
+    }
+  }
+}
+
 void move_right_action(game_instance_t* game_instance,
                        game_parameters_t* game_parameters) {
   if (is_collision(game_instance->game_board, game_instance->current_block)) {
@@ -123,7 +138,12 @@ void collide_action(game_instance_t* game_instance,
       if (is_row_complete(
               game_instance->game_board[game_instance->current_block.y + i])) {
         for (int j = 0; j < WIDTH; ++j) {
-          mvprintw(31, j, "%c ", game_instance->game_board[(int)game_instance->current_block.y + i][j] ? '#' : '0');
+          mvprintw(
+              31, j, "%c ",
+              game_instance
+                      ->game_board[(int)game_instance->current_block.y + i][j]
+                  ? '#'
+                  : '0');
         }
         game_board_shift(game_instance->game_board,
                          (int)game_instance->current_block.y + i);

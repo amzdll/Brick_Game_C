@@ -100,6 +100,7 @@ typedef enum {
 
 #define NO_INPUT -1
 
+#define SPACE_KEY 32
 #define ESCAPE 27
 #define ENTER_KEY 10
 

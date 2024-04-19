@@ -4,14 +4,11 @@
 
 bool is_collision(game_board_t game_board, block_t block) {
   bool collision = false;
-
   if (block.height + block.y == HEIGHT) {
     collision = true;
   }
-
   for (size_t i = 0; i < block.height && !collision; ++i) {
     for (size_t j = 0; j < block.width && !collision; ++j) {
-      // poka eto ponimau tolka ia i bog, zavtra budet znat' tolko bog.
       if (block.field[i][j] && game_board[block.y + i + 1][block.x + j] &&
           ((i + 1 < block.height && !block.field[i + 1][j]) ||
            i + 1 == block.height)) {
@@ -29,9 +26,6 @@ bool is_row_complete(const int* row) {
     }
   }
   return true;
-
-  //  return !(int*)bsearch((void*)&(int){0}, row, WIDTH, sizeof(int),
-  //                        compare_nums);
 }
 
 bool is_game_over(game_board_t game_board, block_t block) {
@@ -70,14 +64,14 @@ void shift_block_cells(block_t* block) {
 // temp
 void draw_field(game_board_t game_board) {
   printf(" \t");
-  for (int i = 0; i < 3; ++i) {
+  for (int i = 0; i < 10; ++i) {
     printf("%d ", i);
   }
   printf(" \n");
-  for (size_t i = 0; i < 3; ++i) {
+  for (size_t i = 0; i < 20; ++i) {
     printf("%zu\t", i);
-    for (size_t j = 0; j < 3; ++j) {
-      printf("%d ", game_board[i][j]);
+    for (size_t j = 0; j < 10; ++j) {
+      printf("%c", game_board[i][j] ? '#' : '-');
     }
     printf("\n");
   }
