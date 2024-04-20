@@ -2,18 +2,20 @@
 #define TETRIS_SRC_BRICK_GAME_TETRIS_INCLUDE_LIB_INTERFACE_H_
 
 #include <stdbool.h>
+
 #include "fsm.h"
+#include "game_entities.h"
 
 typedef enum {
-  Start,
-  Pause,
-  Terminate,
-  Left,
-  Right,
-  Up,
-  Down,
-  Action
-} UserAction_t;
+  kStart,
+  kPause,
+  kTerminate,
+  kLeft,
+  kRight,
+  kUp,
+  kDown,
+  kAction
+} UserAction;
 
 typedef struct {
   int **field;
@@ -23,9 +25,11 @@ typedef struct {
   int level;
   int speed;
   int pause;
-} GameInfo_t;
+} GameInfo;
 
-void userInput(UserAction_t action, bool hold);
-GameInfo_t updateCurrentState();
+GameInfo FillGameInfo(GameInstance game_instance, GameParameters game_parameters);
+
+void UserInput(UserAction action, bool hold);
+GameInfo UpdateCurrentState();
 
 #endif  // TETRIS_SRC_BRICK_GAME_TETRIS_INCLUDE_LIB_INTERFACE_H_

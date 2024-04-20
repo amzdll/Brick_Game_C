@@ -1,10 +1,21 @@
 #include "lib_interface.h"
 
-void userInput(UserAction_t action, bool hold) {
+void UserInput(UserAction action, bool hold) {
   return;
 }
 
-GameInfo_t updateCurrentState() {
-  GameInfo_t result;
+GameInfo UpdateCurrentState() {
+  GameInfo result;
   return result;
+}
+GameInfo FillGameInfo(GameInstance game_instance, GameParameters game_parameters) {
+  return (GameInfo) {
+    game_instance.game_board,
+        NULL,
+        game_parameters.score,
+        0,
+        game_parameters.level,
+        game_parameters.speed,
+        false
+  };
 }

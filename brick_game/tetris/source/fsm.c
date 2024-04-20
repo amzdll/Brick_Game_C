@@ -2,76 +2,66 @@
 
 #include "helpers.h"
 
-action fsm_table[8][8] = {
+const FSMAction kActionTable[8][8] = {
     // START
-    {NULL, NULL, NULL, NULL, NULL, exit_state_action, start_action, NULL},
+    {NULL, NULL, NULL, NULL, NULL, ExitStateAction, StartAction, NULL},
     // SPAWN
-    {spawn_action, spawn_action, spawn_action, spawn_action, spawn_action,
-     spawn_action, spawn_action, spawn_action},
+    {SpawnAction, SpawnAction, SpawnAction, SpawnAction, SpawnAction,SpawnAction, SpawnAction, NULL},
     // MOVING
-    {rotate_action, move_down_action, move_right_action, move_left_action,
-     force_move_down_action, exit_state_action, NULL, NULL},
+    {RotateAction, MoveDownAction, MoveRightAction, MoveLeftAction,ForceMoveDownAction, ExitStateAction, NULL, NULL},
     // SHIFTING
-    {shift_action, shift_action, shift_action, shift_action, shift_action, NULL,
-     NULL, NULL},
+    {ShiftAction, ShiftAction, ShiftAction, ShiftAction, ShiftAction, NULL,NULL, NULL},
     // COLLIDE
-    {collide_action, collide_action, collide_action, collide_action,
-     collide_action, collide_action, collide_action, NULL},
+    {CollideAction, CollideAction, CollideAction, CollideAction, CollideAction,CollideAction, CollideAction, NULL},
     // GAME_OVER
-    {game_over_action, game_over_action, game_over_action, game_over_action,
-     game_over_action, game_over_action, game_over_action, NULL},
+    {GameOverAction, GameOverAction, GameOverAction, GameOverAction,GameOverAction, GameOverAction, GameOverAction, NULL},
     // EXIT_STATE
-    {exit_state_action, exit_state_action, exit_state_action, exit_state_action,
-     exit_state_action, exit_state_action, exit_state_action, NULL},
+    {ExitStateAction, ExitStateAction, ExitStateAction, ExitStateAction,ExitStateAction, ExitStateAction, ExitStateAction, NULL},
 };
 
-void call_action(signals signal, game_instance_t* game_instance,
-                 game_parameters_t* game_parameters) {
-  action action = fsm_table[game_parameters->current_state][signal];
-
-  if (action) {
-    action(game_instance, game_parameters);
+void CallAction(signals signal, GameInstance* game_instance,
+                GameParameters* game_stats) {
+  FSMAction pAction = kActionTable[game_stats->current_state][signal];
+  if (pAction) {
+    pAction(game_instance, game_stats);
   }
 }
 
-signals get_signal(int user_input) {
-  signals signal = NO_SIG;
+signals GetSignal(int user_input) {
+  signals signal = kNoSig;
   if (user_input == KEY_UP)
-    signal = MOVE_UP;
+    signal = kMoveUpSig;
   else if (user_input == KEY_DOWN)
-    signal = MOVE_DOWN;
+    signal = kMoveDownSig;
   else if (user_input == KEY_LEFT)
-    signal = MOVE_LEFT;
+    signal = kMoveLeftSig;
   else if (user_input == KEY_RIGHT)
-    signal = MOVE_RIGHT;
+    signal = kMoveRightSig;
   else if (user_input == ESCAPE)
-    signal = ESCAPE_BTN;
+    signal = kExitSig;
   else if (user_input == ENTER_KEY)
-    signal = ENTER_BTN;
+    signal = kStartSig;
   else if (user_input == SPACE_KEY)
-    signal = SPACE_BTN;
+    signal = kForceMoveDownSig;
 
   return signal;
 }
 
-void start_action(game_instance_t* game_instance,
-                  game_parameters_t* game_parameters) {
+void StartAction(GameInstance* game_instance, GameParameters* game_stats) {
   if (game_instance) {
-    clear_game_board(game_instance->game_board);
+    ClearGameBoard(game_instance->game_board);
   }
-  game_parameters->current_state = SPAWN;
+  game_stats->current_state = SPAWN;
 }
 
-void spawn_action(game_instance_t* game_instance,
-                  game_parameters_t* game_parameters) {
-  game_instance->current_block = create_block(game_instance->block_pool);
-  spawn_block(game_instance->game_board, game_instance->current_block);
-  game_parameters->current_state = MOVING;
+void SpawnAction(GameInstance* game_instance, GameParameters* game_stats) {
+  game_instance->current_block = CreateBlock(game_instance->block_pool);
+  SpawnBlock(game_instance->game_board, game_instance->current_block);
+  game_stats->current_state = MOVING;
 }
 
-void shift_action(game_instance_t* game_instance,
-                  game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board, game_instance->current_block)) {
+void ShiftAction(GameInstance* game_instance, GameParameters* game_parameters) {
+  if (IsCollision(game_instance->game_board, game_instance->current_block)) {
     game_parameters->current_state = COLLIDE;
   } else {
     //    move_down(game_instance->game_board, &game_instance->current_block);
@@ -79,63 +69,57 @@ void shift_action(game_instance_t* game_instance,
   }
 }
 
-void rotate_action(game_instance_t* game_instance,
-                   game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board, game_instance->current_block)) {
-    game_parameters->current_state = COLLIDE;
+void RotateAction(GameInstance* game_instance, GameParameters* game_stats) {
+  if (IsCollision(game_instance->game_board, game_instance->current_block)) {
+    game_stats->current_state = COLLIDE;
   } else {
-    rotate_block(game_instance->game_board, &game_instance->current_block);
-    game_parameters->current_state = SHIFTING;
+    RotateBlock(game_instance->game_board, &game_instance->current_block);
+    game_stats->current_state = SHIFTING;
   }
 }
-void move_down_action(game_instance_t* game_instance,
-                      game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board, game_instance->current_block)) {
-    game_parameters->current_state = COLLIDE;
+void MoveDownAction(GameInstance* game_instance, GameParameters* game_stats) {
+  if (IsCollision(game_instance->game_board, game_instance->current_block)) {
+    game_stats->current_state = COLLIDE;
   } else {
-    move_down(game_instance->game_board, &game_instance->current_block);
-    game_parameters->current_state = SHIFTING;
+    MoveDown(game_instance->game_board, &game_instance->current_block);
+    game_stats->current_state = SHIFTING;
   }
 }
 
-void force_move_down_action(game_instance_t* game_instance,
-                            game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board, game_instance->current_block)) {
+void ForceMoveDownAction(GameInstance* game_instance,
+                         GameParameters* game_parameters) {
+  if (IsCollision(game_instance->game_board, game_instance->current_block)) {
     game_parameters->current_state = COLLIDE;
   } else {
-    while (!is_collision(game_instance->game_board,
-                         game_instance->current_block)) {
-      move_down(game_instance->game_board, &game_instance->current_block);
+    while (!IsCollision(game_instance->game_board, game_instance->current_block)) {
+      MoveDown(game_instance->game_board, &game_instance->current_block);
       game_parameters->current_state = COLLIDE;
     }
   }
 }
 
-void move_right_action(game_instance_t* game_instance,
-                       game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board, game_instance->current_block)) {
-    game_parameters->current_state = COLLIDE;
+void MoveRightAction(GameInstance* game_instance, GameParameters* game_stats) {
+  if (IsCollision(game_instance->game_board, game_instance->current_block)) {
+    game_stats->current_state = COLLIDE;
   } else {
-    move_right(game_instance->game_board, &game_instance->current_block);
-    game_parameters->current_state = SHIFTING;
+    MoveRight(game_instance->game_board, &game_instance->current_block);
+    game_stats->current_state = SHIFTING;
   }
 }
-void move_left_action(game_instance_t* game_instance,
-                      game_parameters_t* game_parameters) {
-  if (is_collision(game_instance->game_board, game_instance->current_block)) {
-    game_parameters->current_state = COLLIDE;
+void MoveLeftAction(GameInstance* game_instance, GameParameters* game_stats) {
+  if (IsCollision(game_instance->game_board, game_instance->current_block)) {
+    game_stats->current_state = COLLIDE;
   } else {
-    move_left(game_instance->game_board, &game_instance->current_block);
-    game_parameters->current_state = SHIFTING;
+    MoveLeft(game_instance->game_board, &game_instance->current_block);
+    game_stats->current_state = SHIFTING;
   }
 }
-void collide_action(game_instance_t* game_instance,
-                    game_parameters_t* game_parameters) {
+void CollideAction(GameInstance* game_instance, GameParameters* game_stats) {
   if (game_instance->current_block.y == 0) {
-    game_parameters->current_state = GAME_OVER;
+    game_stats->current_state = GAME_OVER;
   } else {
     for (int i = 0; i < game_instance->current_block.height; ++i) {
-      if (is_row_complete(
+      if (IsRowComplete(
               game_instance->game_board[game_instance->current_block.y + i])) {
         for (int j = 0; j < WIDTH; ++j) {
           mvprintw(
@@ -145,24 +129,25 @@ void collide_action(game_instance_t* game_instance,
                   ? '#'
                   : '0');
         }
-        game_board_shift(game_instance->game_board,
-                         (int)game_instance->current_block.y + i);
+        GameBoardShift(game_instance->game_board,
+                       (int)game_instance->current_block.y + i);
       }
     }
-    game_parameters->current_state = SPAWN;
+    game_stats->current_state = SPAWN;
   }
 }
-void exit_state_action(game_instance_t* game_instance,
-                       game_parameters_t* game_parameters) {
+void ExitStateAction(GameInstance* game_instance, GameParameters* game_stats) {
   // free
   return;
 }
-void game_over_action(game_instance_t* game_instance,
-                      game_parameters_t* game_parameters) {
-  clear_game_board(game_instance->game_board);
-  game_parameters->current_state = START;
+void GameOverAction(GameInstance* game_instance, GameParameters* game_stats) {
+  ClearGameBoard(game_instance->game_board);
+  game_stats->current_state = START;
 }
 
 // void game_over(params_t *prms) { print_banner(prms->stats); }
 
 // void exit_tate(params_t *prms) { *prms->state = EXIT_STATE; }
+
+
+

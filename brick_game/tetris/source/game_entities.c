@@ -1,15 +1,15 @@
 #include "game_entities.h"
 
-game_instance_t initialize_game_instance() {
+GameInstance InitializeGameInstance() {
 #ifdef __linux__
   initialize_random_seed();
 #endif
-  return (game_instance_t){
-      allocate_int_two_dimensional_array((size_t)HEIGHT, (size_t)WIDTH),
-      (block_t){}, initialize_blocks()};
+  return (GameInstance){
+      AllocateIntTwoDimensionalArray((size_t)HEIGHT, (size_t)WIDTH),
+      (Block){}, InitializeBlocks()};
 }
 
-void initialize_random_seed() {
+void InitializeRandomSeed() {
   unsigned int seed = time(NULL);
   int fd = open("/dev/urandom", O_RDONLY);
   if (fd != -1) {
@@ -22,32 +22,32 @@ void initialize_random_seed() {
   srand(seed);
 }
 
-game_parameters_t initialize_game_parameters() {
-  return (game_parameters_t){0, 1, 1, START};
+GameParameters InitializeGameParameters() {
+  return (GameParameters){0, 1, 1, START};
 }
 
-block_t *initialize_blocks() {
-  block_t *blocks = (block_t *)calloc(BLOCKS_COUNT, sizeof(block_t));
+Block *InitializeBlocks() {
+  Block *blocks = (Block *)calloc(BLOCKS_COUNT, sizeof(Block));
 
-  blocks[0] = initialize_block(1, 4, I_BLOCK);
-  blocks[1] = initialize_block(2, 3, J_BLOCK);
-  blocks[2] = initialize_block(2, 3, L_BLOCK);
-  blocks[3] = initialize_block(2, 2, O_BLOCK);
-  blocks[4] = initialize_block(2, 3, S_BLOCK);
-  blocks[5] = initialize_block(2, 3, Z_BLOCK);
-  blocks[6] = initialize_block(2, 3, T_BLOCK);
+  blocks[0] = InitializeBlock(1, 4, I_BLOCK);
+  blocks[1] = InitializeBlock(2, 3, J_BLOCK);
+  blocks[2] = InitializeBlock(2, 3, L_BLOCK);
+  blocks[3] = InitializeBlock(2, 2, O_BLOCK);
+  blocks[4] = InitializeBlock(2, 3, S_BLOCK);
+  blocks[5] = InitializeBlock(2, 3, Z_BLOCK);
+  blocks[6] = InitializeBlock(2, 3, T_BLOCK);
 
   return blocks;
 }
 
-block_t initialize_block(size_t height, size_t width, int (*figure)[width]) {
+Block InitializeBlock(size_t height, size_t width, int (*figure)[width]) {
   size_t dimension = height > width ? height : width;
-  block_t block = {block.x = (int)(WIDTH - width) / 2,
+  Block block = {block.x = (int)(WIDTH - width) / 2,
                    0,
                    height,
                    width,
                    dimension,
-                   allocate_int_two_dimensional_array(dimension, dimension)};
+                   AllocateIntTwoDimensionalArray(dimension, dimension)};
   for (int i = 0; i < height; ++i) {
     memcpy(block.field[i], figure[i], width * sizeof(int));
   }

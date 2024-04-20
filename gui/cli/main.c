@@ -5,49 +5,47 @@
 #include <libintl.h>
 #endif
 
+#include "lib_interface.h"
 #include "command_line_interface.h"
 #include "fsm.h"
 #include "helpers.h"
 
-void game_loop() {
-  game_instance_t game_instance = initialize_game_instance();
-  game_parameters_t prms = initialize_game_parameters();
-
+void GameLoop() {
+  GameInstance game_instance = InitializeGameInstance();
+  GameParameters parameters = InitializeGameParameters();
+  GameInfo game_info = {NULL, NULL, 0,0,0,0,0};
   bool break_flag = TRUE;
   int signal = 0;
-  draw_parameters(prms);
+  draw_parameters(game_info);
   game_state state;
 
-
   while (break_flag) {
-    state = prms.current_state;
+    state = parameters.current_state;
     if (state == GAME_OVER || state == EXIT_STATE) {
       break_flag = FALSE;
     }
-
     if (state == MOVING || state == START) {
       signal = GET_USER_INPUT;
       mvprintw(0, 0, "current state = %d\tsignal = %d", state,
-               get_signal(signal));
-      draw_board(game_instance.game_board);
-      //    } else if (state == SHIFTING) {
-      //
+               GetSignal(signal));
+
+      draw_board(FillGameInfo(game_instance, parameters));
     }
-    call_action(get_signal(signal), &game_instance, &prms);
+    CallAction(GetSignal(signal), &game_instance, &parameters);
   }
 }
 
 int main() {
-      WIN_INIT(50)
-      setlocale(LC_ALL, "");
-      draw_overlay();
-      game_loop();
-      endwin();
+  WIN_INIT(50)
+  setlocale(LC_ALL, "");
+  draw_overlay();
+  GameLoop();
+  endwin();
   return 0;
 }
 
-//
-//typedef struct {
+
+// typedef struct {
 //  int **field;
 //  int **next;
 //  int score;
@@ -56,6 +54,6 @@ int main() {
 //  int speed;
 //  int pause;
 //} GameInfo_t;
-//
-//void userInput(UserAction_t action, bool hold);
-//GameInfo_t updateCurrentState();
+
+// void userInput(UserAction_t action, bool hold);
+// GameInfo_t updateCurrentState();

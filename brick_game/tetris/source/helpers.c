@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-bool is_collision(game_board_t game_board, block_t block) {
+bool IsCollision(GameBoard game_board, Block block) {
   bool collision = false;
   if (block.height + block.y == HEIGHT) {
     collision = true;
@@ -19,7 +19,7 @@ bool is_collision(game_board_t game_board, block_t block) {
   return collision;
 }
 
-bool is_row_complete(const int* row) {
+bool IsRowComplete(const int* row) {
   for (int i = 0; i < WIDTH; ++i) {
     if (row[i] == 0) {
       return false;
@@ -28,41 +28,41 @@ bool is_row_complete(const int* row) {
   return true;
 }
 
-bool is_game_over(game_board_t game_board, block_t block) {
-  return is_collision(game_board, block) && block.y == 0;
+bool IsGameOver(GameBoard game_board, Block block) {
+  return IsCollision(game_board, block) && block.y == 0;
 }
 
-void clear_game_board(game_board_t game_board) {
+void ClearGameBoard(GameBoard game_board) {
   for (int i = 0; i < HEIGHT; ++i) {
     memset(game_board[i], 0, WIDTH * sizeof(int));
   }
 }
 
-void shift_block_cells(block_t* block) {
+void ShiftBlockCells(Block* block) {
   size_t left_cell_index = block->width;
-  for (size_t i = 0; i < block->field_dimenssion; i++) {
-    for (size_t j = 0; j < block->field_dimenssion; j++) {
+  for (size_t i = 0; i < block->field_dimension; i++) {
+    for (size_t j = 0; j < block->field_dimension; j++) {
       if (block->field[i][j] != 0) {
         left_cell_index = left_cell_index < j ? left_cell_index : j;
         break;
       }
     }
   }
-  for (size_t i = 0; i < block->field_dimenssion; ++i) {
+  for (size_t i = 0; i < block->field_dimension; ++i) {
     for (size_t j = left_cell_index; j < block->width; ++j) {
       block->field[i][j - left_cell_index] = block->field[i][j];
     }
   }
-  for (size_t i = 0; i < block->field_dimenssion; ++i) {
-    for (size_t j = block->field_dimenssion - left_cell_index;
-         j < block->field_dimenssion; ++j) {
+  for (size_t i = 0; i < block->field_dimension; ++i) {
+    for (size_t j = block->field_dimension - left_cell_index;
+         j < block->field_dimension; ++j) {
       block->field[i][j] = 0;
     }
   }
 }
 
 // temp
-void draw_field(game_board_t game_board) {
+void draw_field(GameBoard game_board) {
   printf(" \t");
   for (int i = 0; i < 10; ++i) {
     printf("%d ", i);

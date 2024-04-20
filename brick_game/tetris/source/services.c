@@ -2,16 +2,16 @@
 
 #include "helpers.h"
 
-block_t create_block(block_t* blocks) {
+Block CreateBlock(Block* blocks) {
 #ifdef __APPLE__
   uint32_t block_index = arc4random() % 2;
 #else
-  int block_index = rand() % 2;
+  int block_index = rand() % BLOCKS_COUNT;
 #endif
 //  block_t block = blocks[block_index];
-  block_t block = blocks[block_index];
-  int** block_field = allocate_int_two_dimensional_array(
-      block.field_dimenssion, block.field_dimenssion);
+  Block block = blocks[block_index];
+  int** block_field = AllocateIntTwoDimensionalArray(block.field_dimension,
+                                                     block.field_dimension);
   for (int i = 0; i < block.height; ++i) {
     memcpy(block_field[i], block.field[i], block.width * sizeof(int));
   }
@@ -20,7 +20,7 @@ block_t create_block(block_t* blocks) {
   return block;
 }
 
-void place_block(game_board_t game_board, block_t block) {
+void PlaceBlock(GameBoard game_board, Block block) {
   for (int i = 0; i < block.height; ++i) {
     for (int j = 0; j < block.width; ++j) {
       game_board[block.y + i][block.x + j] |= block.field[i][j];
@@ -28,7 +28,7 @@ void place_block(game_board_t game_board, block_t block) {
   }
 }
 
-void remove_block(game_board_t game_board, block_t block) {
+void RemoveBlock(GameBoard game_board, Block block) {
   int* game_board_cell = NULL;
   int* block_cell = NULL;
   for (int i = 0; i < block.height; ++i) {
@@ -40,38 +40,38 @@ void remove_block(game_board_t game_board, block_t block) {
   }
 }
 
-void spawn_block(game_board_t game_board, block_t block) {
-  place_block(game_board, block);
+void SpawnBlock(GameBoard game_board, Block block) {
+  PlaceBlock(game_board, block);
 }
 
-void rotate_block(game_board_t game_board, block_t* block) {
+void RotateBlock(GameBoard game_board, Block* block) {
   // todo: statement guard
 
-  remove_block(game_board, *block);
+  RemoveBlock(game_board, *block);
   int block_cell = 0;
-  for (int i = 0; i < block->field_dimenssion / 2; i++) {
-    for (int j = i; j < block->field_dimenssion - i - 1; j++) {
+  for (int i = 0; i < block->field_dimension / 2; i++) {
+    for (int j = i; j < block->field_dimension - i - 1; j++) {
       block_cell = block->field[i][j];
-      block->field[i][j] = block->field[block->field_dimenssion - 1 - j][i];
-      block->field[block->field_dimenssion - 1 - j][i] =
-          block->field[block->field_dimenssion - 1 - i]
-                      [block->field_dimenssion - 1 - j];
-      block->field[block->field_dimenssion - 1 - i]
-                  [block->field_dimenssion - 1 - j] =
-          block->field[j][block->field_dimenssion - 1 - i];
-      block->field[j][block->field_dimenssion - 1 - i] = block_cell;
+      block->field[i][j] = block->field[block->field_dimension - 1 - j][i];
+      block->field[block->field_dimension - 1 - j][i] =
+          block->field[block->field_dimension - 1 - i]
+                      [block->field_dimension - 1 - j];
+      block->field[block->field_dimension - 1 - i]
+                  [block->field_dimension - 1 - j] =
+          block->field[j][block->field_dimension - 1 - i];
+      block->field[j][block->field_dimension - 1 - i] = block_cell;
     }
   }
-  shift_block_cells(block);
+  ShiftBlockCells(block);
   size_t block_width = block->height;
   size_t block_height = block->width;
   block->width = block_width;
   block->height = block_height;
 
-  place_block(game_board, *block);
+  PlaceBlock(game_board, *block);
 }
 
-void move_left(game_board_t game_board, block_t* block) {
+void MoveLeft(GameBoard game_board, Block* block) {
   if (block->x == 0) {
     return;
   }
@@ -83,12 +83,12 @@ void move_left(game_board_t game_board, block_t* block) {
     j = 0;
   }
 
-  remove_block(game_board, *block);
+  RemoveBlock(game_board, *block);
   --block->x;
-  place_block(game_board, *block);
+  PlaceBlock(game_board, *block);
 }
 
-void move_right(game_board_t game_board, block_t* block) {
+void MoveRight(GameBoard game_board, Block* block) {
   // statement guard
   // for height for  last_elemnt width && last_elemnt width + 1 || ...
   if (block->x + block->width == WIDTH) {
@@ -101,18 +101,18 @@ void move_right(game_board_t game_board, block_t* block) {
     }
   }
 
-  remove_block(game_board, *block);
+  RemoveBlock(game_board, *block);
   ++block->x;
-  place_block(game_board, *block);
+  PlaceBlock(game_board, *block);
 }
 
-void move_down(game_board_t game_board, block_t* block) {
-  remove_block(game_board, *block);
+void MoveDown(GameBoard game_board, Block* block) {
+  RemoveBlock(game_board, *block);
   ++block->y;
-  place_block(game_board, *block);
+  PlaceBlock(game_board, *block);
 }
 
-void game_board_shift(game_board_t game_board, int row_index) {
+void GameBoardShift(GameBoard game_board, int row_index) {
   memset(game_board[row_index], 0, WIDTH * sizeof(int));
   for (int i = row_index - 1; i > 0; --i) {
     memcpy(game_board[i + 1], game_board[i], WIDTH * sizeof(int));

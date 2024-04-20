@@ -11,36 +11,37 @@
 #include "defines.h"
 #include "memory_management.h"
 
-typedef int** game_board_t;
+typedef int** GameBoard;
 
-typedef struct block {
+typedef struct {
   size_t x;
   size_t y;
   size_t height;
   size_t width;
-  size_t field_dimenssion;
+  size_t field_dimension;
   int** field;
-} block_t;
+} Block;
 
-typedef struct game_instance {
-  game_board_t game_board;
-  block_t current_block;
-  block_t* block_pool;
-} game_instance_t;
+typedef struct {
+  GameBoard game_board;
+  Block current_block;
+  Block* block_pool;
+} GameInstance;
 
-
-
-typedef struct game_parameters {
+typedef struct {
   int score;
   int level;
   int speed;
   game_state current_state;
-} game_parameters_t;
+} GameParameters;
 
-game_instance_t initialize_game_instance();
-game_parameters_t initialize_game_parameters();
-block_t* initialize_blocks();
-block_t initialize_block(size_t height, size_t width, int (*figure)[width]);
-void initialize_random_seed();
+GameInstance InitializeGameInstance();
+GameParameters InitializeGameParameters();
+
+Block* InitializeBlocks();
+Block InitializeBlock(size_t height, size_t width, int (*figure)[width]);
+Block CreateBlock(Block* blocks);
+
+void InitializeRandomSeed();
 
 #endif  // TETRIS_SRC_BRICK_GAME_TETRIS_INCLUDE_GAME_ENTITIES_H_

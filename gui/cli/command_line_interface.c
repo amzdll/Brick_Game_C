@@ -1,5 +1,6 @@
 #include "command_line_interface.h"
 
+
 void draw_overlay(void) {
   draw_rectangle(0, BOARD_N + 1, 0, BOARD_M + 1);
   draw_rectangle(0, BOARD_N + 1, BOARD_M + 2, BOARD_M + HUD_WIDTH + 3);
@@ -34,32 +35,16 @@ void draw_rectangle(int top_y, int bottom_y, int left_x, int right_x) {
   MVADDCH(bottom_y, i, ACS_LRCORNER);
 }
 
-void draw_parameters(game_parameters_t game_parameters) {
-  MVPRINTW(2, BOARD_M + 12, "%d", game_parameters.level);
-  MVPRINTW(5, BOARD_M + 12, "%d", game_parameters.score);
-  MVPRINTW(8, BOARD_M + 12, "%d", game_parameters.speed);
+void draw_parameters(GameInfo game_info) {
+  MVPRINTW(2, BOARD_M + 12, "%d", game_info.level);
+  MVPRINTW(5, BOARD_M + 12, "%d", game_info.score);
+  MVPRINTW(8, BOARD_M + 12, "%d", game_info.speed);
 }
 
-void draw_board(game_board_t game_board) {
+void draw_board(GameInfo game_info) {
   for (int i = 1; i < HEIGHT + 1; i++) {
     for (int j = 1; j < WIDTH + 1; j++) {
-      game_board[i - 1][j - 1] ? MVADDCH(i, j, '#') : MVADDCH(i, j, '-');
+      game_info.field[i - 1][j - 1] ? MVADDCH(i, j, '#') : MVADDCH(i, j, '-');
     }
   }
 }
-//  for (int i = MAP_PADDING + 1; i < BOARD_N - MAP_PADDING + 1; i++) {
-//    if (i % 2 == (MAP_PADDING + 1) % 2) {
-//      for (int j = 1; j < BOARD_M + 1; j++) {
-////        ACS_BLOCK
-//        MVADDCH(i, j, ' ');
-//      }
-//    } else {
-//      for (int j = 1; j < BOARD_M + 1; j++) {
-//        if (game_board[i - MAP_PADDING - 1][j - 1] == 0)
-//          MVADDCH(i, j, ' ');
-//        else
-//          MVADDCH(i, j, '#');
-//      }
-//    }
-//  }
-//}
