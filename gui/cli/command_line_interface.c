@@ -41,7 +41,7 @@ void draw_parameters(GameInfo game_info) {
   MVPRINTW(8, BOARD_M + 12, "%d", game_info.speed);
 }
 
-void draw_board(GameInfo game_info) {
+void DrawBoard(GameInfo game_info) {
   for (int i = 1; i < HEIGHT + 1; i++) {
     for (int j = 1; j < WIDTH + 1; j++) {
       game_info.field[i - 1][j - 1] ? MVADDCH(i, j, '#') : MVADDCH(i, j, '-');

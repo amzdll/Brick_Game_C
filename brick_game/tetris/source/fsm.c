@@ -6,17 +6,23 @@ const FSMAction kActionTable[8][8] = {
     // START
     {NULL, NULL, NULL, NULL, NULL, ExitStateAction, StartAction, NULL},
     // SPAWN
-    {SpawnAction, SpawnAction, SpawnAction, SpawnAction, SpawnAction,SpawnAction, SpawnAction, NULL},
+    {SpawnAction, SpawnAction, SpawnAction, SpawnAction, SpawnAction,
+     SpawnAction, SpawnAction, NULL},
     // MOVING
-    {RotateAction, MoveDownAction, MoveRightAction, MoveLeftAction,ForceMoveDownAction, ExitStateAction, NULL, NULL},
+    {RotateAction, MoveDownAction, MoveRightAction, MoveLeftAction,
+     ForceMoveDownAction, ExitStateAction, NULL, NULL},
     // SHIFTING
-    {ShiftAction, ShiftAction, ShiftAction, ShiftAction, ShiftAction, NULL,NULL, NULL},
+    {ShiftAction, ShiftAction, ShiftAction, ShiftAction, ShiftAction, NULL,
+     NULL, NULL},
     // COLLIDE
-    {CollideAction, CollideAction, CollideAction, CollideAction, CollideAction,CollideAction, CollideAction, NULL},
+    {CollideAction, CollideAction, CollideAction, CollideAction, CollideAction,
+     CollideAction, CollideAction, NULL},
     // GAME_OVER
-    {GameOverAction, GameOverAction, GameOverAction, GameOverAction,GameOverAction, GameOverAction, GameOverAction, NULL},
+    {GameOverAction, GameOverAction, GameOverAction, GameOverAction,
+     GameOverAction, GameOverAction, GameOverAction, NULL},
     // EXIT_STATE
-    {ExitStateAction, ExitStateAction, ExitStateAction, ExitStateAction,ExitStateAction, ExitStateAction, ExitStateAction, NULL},
+    {ExitStateAction, ExitStateAction, ExitStateAction, ExitStateAction,
+     ExitStateAction, ExitStateAction, ExitStateAction, NULL},
 };
 
 void CallAction(signals signal, GameInstance* game_instance,
@@ -88,13 +94,10 @@ void MoveDownAction(GameInstance* game_instance, GameParameters* game_stats) {
 
 void ForceMoveDownAction(GameInstance* game_instance,
                          GameParameters* game_parameters) {
-  if (IsCollision(game_instance->game_board, game_instance->current_block)) {
+  while (
+      !IsCollision(game_instance->game_board, game_instance->current_block)) {
+    MoveDown(game_instance->game_board, &game_instance->current_block);
     game_parameters->current_state = COLLIDE;
-  } else {
-    while (!IsCollision(game_instance->game_board, game_instance->current_block)) {
-      MoveDown(game_instance->game_board, &game_instance->current_block);
-      game_parameters->current_state = COLLIDE;
-    }
   }
 }
 
@@ -121,14 +124,6 @@ void CollideAction(GameInstance* game_instance, GameParameters* game_stats) {
     for (int i = 0; i < game_instance->current_block.height; ++i) {
       if (IsRowComplete(
               game_instance->game_board[game_instance->current_block.y + i])) {
-        for (int j = 0; j < WIDTH; ++j) {
-          mvprintw(
-              31, j, "%c ",
-              game_instance
-                      ->game_board[(int)game_instance->current_block.y + i][j]
-                  ? '#'
-                  : '0');
-        }
         GameBoardShift(game_instance->game_board,
                        (int)game_instance->current_block.y + i);
       }
@@ -148,6 +143,3 @@ void GameOverAction(GameInstance* game_instance, GameParameters* game_stats) {
 // void game_over(params_t *prms) { print_banner(prms->stats); }
 
 // void exit_tate(params_t *prms) { *prms->state = EXIT_STATE; }
-
-
-

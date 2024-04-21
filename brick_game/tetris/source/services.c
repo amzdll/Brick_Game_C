@@ -4,12 +4,12 @@
 
 Block CreateBlock(Block* blocks) {
 #ifdef __APPLE__
-  uint32_t block_index = arc4random() % 2;
+  uint32_t block_index = arc4random() % BLOCKS_COUNT;
 #else
   int block_index = rand() % BLOCKS_COUNT;
 #endif
 //  block_t block = blocks[block_index];
-  Block block = blocks[block_index];
+  Block block = blocks[3];
   int** block_field = AllocateIntTwoDimensionalArray(block.field_dimension,
                                                      block.field_dimension);
   for (int i = 0; i < block.height; ++i) {
@@ -113,10 +113,14 @@ void MoveDown(GameBoard game_board, Block* block) {
 }
 
 void GameBoardShift(GameBoard game_board, int row_index) {
-  memset(game_board[row_index], 0, WIDTH * sizeof(int));
   for (int i = row_index - 1; i > 0; --i) {
     memcpy(game_board[i + 1], game_board[i], WIDTH * sizeof(int));
   }
 }
+
+// 0 0 0
+// 0 0 0
+// 1 1 0
+// 0 1 0
 
 //  void fast_down_move() {}
